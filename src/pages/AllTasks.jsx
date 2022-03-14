@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import Task from "../components/Task";
 import Tasksservices from "../services/Tasksservices";
 
 const AllTasks = () => {
   //ucitaj listu taskova
   const [task, setTask] = useState([]);
+  const [currTask, setCurrTask] = useState(null);
+  const [currIndex, setCurrIndex] = useState(-1);
 
   const onDataChange = (data) => {
     let tasks = [];
@@ -16,14 +19,15 @@ const AllTasks = () => {
         key: key,
         title: podaci.title,
         desc: podaci.desc,
-        executed: podaci.executed,
+        execute: podaci.execute,
       });
     });
 
     setTask(tasks);
   };
   const osveziListu = () => {
-    alert("obrisano");
+    setCurrIndex(-1);
+    setCurrTask(null);
   };
   const obrisiSve = () => {
     //db becomes null
@@ -46,15 +50,32 @@ const AllTasks = () => {
     };
   }, []);
 
+  const setActiveTask = (task, i) => {
+    const { key, title, desc, execute } = task;
+
+    setCurrTask({
+      key,
+      title,
+      desc,
+      execute,
+    });
+  };
+
   return (
     <div>
-      <div className="list-row">
-        <div className="col-md-12">
+      <div className="list-row d-flex gap-5" >
+        <div className="col-md-6">
           <h2>Lista taskova</h2>
           <ul className="list-group">
             {task &&
               task.map((el, i) => (
-                <li className="list-group-item" key={i}>
+                <li
+                  className={
+                    "list-group-item" + (i === currIndex ? "bg-dark" : "")
+                  }
+                  key={i}
+                  onClick={() => setActiveTask(el, i)}
+                >
                   {el.title}
                 </li>
               ))}
@@ -62,6 +83,9 @@ const AllTasks = () => {
           <button className="btn btn-danger my-3" onClick={obrisiSve}>
             Brisi sve
           </button>
+        </div>
+        <div className="col-md-6">
+          {currTask ? <Task task={currTask} refresh={osveziListu}/> : <h3>Klikni task za detalje</h3>}
         </div>
       </div>
     </div>

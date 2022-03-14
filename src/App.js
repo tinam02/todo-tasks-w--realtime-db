@@ -27,7 +27,6 @@ function App() {
       </nav>
 
       <div className="container mt-3">
-        <h1>React CRUD app sa realtime db</h1>
         <Routes>
           <Route path="/" element={<AllTasks />} />
           <Route path="/add" element={<AddTask />} />
