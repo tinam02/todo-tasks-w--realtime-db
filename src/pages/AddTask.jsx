@@ -8,6 +8,7 @@ const AddTask = () => {
     execute: false,
   };
   const [task, setTask] = useState(initialState);
+  const [submitted, setSubmitted] = useState(false);
 
   const uhvatiPromenu = (evt) => {
     const { name, value } = evt.target;
@@ -20,42 +21,61 @@ const AddTask = () => {
     //salji u fb
     Tasksservices.kreiraj(data)
       .then(() => {
-        alert("Success");
+        //go to add new task
+        setSubmitted(true);
       })
       .catch((err) => {
         console.log(err);
       });
   };
 
+  //dodaj novi task;
+  const noviTask = () => {
+    setSubmitted(false);
+    //isprazni formu
+    setTask(initialState);
+  };
+
   return (
-    <div>
-      <div className="form-group">
-        <label htmlFor="title">Title</label>
-        <input
-          type="text"
-          className="form-control"
-          id="title"
-          name="title"
-          placeholder="Title"
-          value={task.title}
-          onChange={uhvatiPromenu}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="desc">Description</label>
-        <input
-          type="text"
-          className="form-control"
-          id="desc"
-          name="desc"
-          placeholder="desc"
-          value={task.desc}
-          onChange={uhvatiPromenu}
-        />
-      </div>{" "}
-      <button onClick={saveTask} className="btn btn-success">
-        Add
-      </button>
+    <div className="submit-form">
+      {submitted ? (
+        <div>
+          <h2>Uspesno dodat task!</h2>
+          <button className="btn btn-primary" onClick={noviTask}>
+            Dodaj novi task
+          </button>
+        </div>
+      ) : (
+        <div>
+          <div className="form-group">
+            <label htmlFor="title">Title</label>
+            <input
+              type="text"
+              className="form-control"
+              id="title"
+              name="title"
+              placeholder="Title"
+              value={task.title}
+              onChange={uhvatiPromenu}
+            />
+          </div>
+          <div className="form-group">
+            <label htmlFor="desc">Description</label>
+            <input
+              type="text"
+              className="form-control"
+              id="desc"
+              name="desc"
+              placeholder="desc"
+              value={task.desc}
+              onChange={uhvatiPromenu}
+            />
+          </div>{" "}
+          <button onClick={saveTask} className="btn btn-primary my-3">
+            Add
+          </button>
+        </div>
+      )}
     </div>
   );
 };
